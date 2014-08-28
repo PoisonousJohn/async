@@ -57,6 +57,6 @@ Separating tasks by concrete threads solves this problem. Network tasks that run
     }
 ```
 
-#Dependencies
+##Requirements
 - C++11
 - Boost
