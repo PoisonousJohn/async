@@ -62,8 +62,8 @@ namespace Async {
         /**
         * @param bgJob job that should done in a background thread\n
         * will be done on a background thread only if background = true\n
-        *
         * otherwise will be done on main thread
+        *
         * @param manualStart if true work will be immediately enqueued for processing\n
         * otherwise job will be enqueued only after start() method
         *
@@ -155,8 +155,22 @@ namespace Async {
         
         /**
          * @brief do on one of background threads
+         *
+         * @param bgJob job that should done in a background thread\n
+         * will be done on a background thread only if background = true\n
+         * otherwise will be done on main thread
+         *
+         * @param manualStart if true work will be immediately enqueued for processing\n
+         * otherwise job will be enqueued only after start() method
+         *
+         * @param fgNotificaton job that should be done after main (bgJob) has been completed\n
+         * fgNotification job will be done always on the main thread
+         *
+         * @param threadIndex setting the thread index will make\n
+         * the job to be done by concrete thread with\n
+         * specified index. If index < 0 then optimal thread will be used
          */
-        virtual Work* doAsync( std::function<void()> bgJob, std::function<void()> fgNotification, bool manualWorkStart = false, int threadIndex = -1 );
+        virtual Work* doAsync( std::function<void()> bgJob, std::function<void()> fgNotification = 0, bool manualWorkStart = false, int threadIndex = -1 );
         
         /**
          * @brief you should periodically invoke this method
