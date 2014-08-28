@@ -8,8 +8,6 @@
 #include <boost/signals2.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/asio.hpp>
-// #include <engine/Module.h>
 
 
 /**
