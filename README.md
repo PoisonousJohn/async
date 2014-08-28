@@ -56,3 +56,7 @@ Separating tasks by concrete threads solves this problem. Network tasks that run
         return 0;
     }
 ```
+
+#Dependencies
+- C++11
+- Boost
