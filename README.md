@@ -9,10 +9,10 @@ This is extremely important in mobile apps due to limited processor resources. W
 Separating tasks by concrete threads solves this problem. Network tasks that run in thread 1 won't block other tasks running in thread 2
 
 ##Simple example
-
-#include <iostream>
-#include <vector>
-#include "Async.h"
+```c++
+    #include <iostream>
+    #include <vector>
+    #include "Async.h"
 
 
     int main(int argc, const char * argv[])
@@ -55,4 +55,4 @@ Separating tasks by concrete threads solves this problem. Network tasks that run
     
         return 0;
     }
-
+```
