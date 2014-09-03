@@ -232,7 +232,7 @@ namespace Async {
     }
 
     Work::~Work() {
-        std::cout << "~Work\n";
+//        std::cout << "~Work\n";
     }
 
 }
