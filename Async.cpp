@@ -1,6 +1,6 @@
 #include "Async.h"
 
-namespace Async {
+namespace poison { namespace Async {
 
     // ASYNC ==============
 
@@ -235,4 +235,4 @@ namespace Async {
 //        std::cout << "~Work\n";
     }
 
-}
+} }

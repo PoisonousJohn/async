@@ -14,6 +14,7 @@ Separating tasks by concrete threads solves this problem. Network tasks that run
     #include <vector>
     #include "Async.h"
 
+    using namespace poison;
 
     int main(int argc, const char * argv[])
     {

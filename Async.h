@@ -9,12 +9,11 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/noncopyable.hpp>
 
-
+    
 /**
 * @author John Poison
 */
-
-namespace Async {
+namespace poison { namespace Async {
 
     class Work;
 
@@ -205,4 +204,5 @@ namespace Async {
     };
     
 
-}
+} }
+
