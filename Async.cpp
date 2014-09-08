@@ -1,5 +1,11 @@
 #include "Async.h"
 
+//#define POISON_DEBUG
+
+#ifdef POISON_DEBUG
+#include <poison_log/log.h>
+#endif
+
 namespace poison { namespace Async {
 
     // ASYNC ==============
@@ -25,7 +31,7 @@ namespace poison { namespace Async {
         }, 0, false, false);
 
         {
-            std::lock_guard<std::recursive_mutex> lock(mutex);
+            std::lock_guard<std::recursive_mutex> lock(m);
             work.push_back(newWork);
         }
 
@@ -37,22 +43,25 @@ namespace poison { namespace Async {
         auto newWork = new Work(this, bgJob, fgNotification, manualWorkerStart, true, threadIndex);
 
         {
-            std::lock_guard<std::recursive_mutex> lock(mutex);
+            std::lock_guard<std::recursive_mutex> lock(m);
             work.push_back(newWork);
         }
 
         return newWork;
-    };
+    }
 
 
     void Async::update() {
 
-        std::lock_guard<std::recursive_mutex> lock(mutex);
+        std::lock_guard<std::recursive_mutex> lock(m);
 
         std::vector<Work*> remove;
 
-        for (auto it = work.begin(); it != work.end(); ++it) {
-            auto& currentWork = *it;
+        // work can be added or deleted during update
+        // (e.g. main thread job invokes in update cycle and adds another job)
+        // so we should iterate over indices
+        for (auto i = 0; i < work.size(); ++i) {
+            auto& currentWork = work[i];
             if (currentWork.update()) {
                 onWorkDone(&currentWork);
                 remove.push_back(&currentWork);
@@ -66,7 +75,7 @@ namespace poison { namespace Async {
     }
 
     void Async::removeWork(Work* work) {
-        std::lock_guard<std::recursive_mutex> lock(mutex);
+        std::lock_guard<std::recursive_mutex> lock(m);
         auto it = std::find(this->work.begin(), this->work.end(), work);
         if ( it != this->work.end() ) {
             this->work.erase(it);
@@ -78,7 +87,7 @@ namespace poison { namespace Async {
             throw std::runtime_error("thread count can't be zero");
         }
 
-        std::lock_guard< std::recursive_mutex > lock(mutex);
+        std::lock_guard< std::recursive_mutex > lock(m);
 
         auto size = workers.size();
         if (value == size) {
@@ -98,12 +107,12 @@ namespace poison { namespace Async {
     }
 
     size_t Async::getThreadsCount() const {
-        std::lock_guard< std::recursive_mutex > lock(mutex);
+        std::lock_guard< std::recursive_mutex > lock(m);
         return workers.size();
     }
 
     void Async::startWork(Work *work) {
-        std::lock_guard< std::recursive_mutex > lock(mutex);
+        std::lock_guard< std::recursive_mutex > lock(m);
         const auto& threadIndex = work->getThreadIndex();
         Worker* worker = 0;
         if (threadIndex) {
@@ -122,7 +131,7 @@ namespace poison { namespace Async {
     }
 
     Worker& Async::getOptimalWorker() {
-        std::lock_guard< std::recursive_mutex > lock(mutex);
+        std::lock_guard< std::recursive_mutex > lock(m);
         Worker* worker = &workers[0];
 
         for (auto it = workers.begin(); it != workers.end(); ++it) {
@@ -232,7 +241,9 @@ namespace poison { namespace Async {
     }
 
     Work::~Work() {
-//        std::cout << "~Work\n";
+#ifdef POISON_DEBUG
+        DBG("~Work %p", this);
+#endif
     }
 
 } }

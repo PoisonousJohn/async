@@ -196,7 +196,7 @@ namespace poison { namespace Async {
         
         boost::ptr_vector<Work> work;
 
-        mutable std::recursive_mutex mutex;
+        mutable std::recursive_mutex m;
 
     protected:
 
