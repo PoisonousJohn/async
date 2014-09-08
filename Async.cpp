@@ -194,12 +194,12 @@ namespace poison { namespace Async {
                 bool background_,
                 int threadIndex_)
 
-            : async(async_)
+            : hasDone(false)
             , fgNotification(fgNotification_)
-            , hasDone(false)
             , job(bgJob_)
             , started(false)
             , background(background_)
+            , async(async_)
 
     {
         if (threadIndex_ >= 0) {
